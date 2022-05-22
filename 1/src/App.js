@@ -9,7 +9,7 @@ import ItemList from './ItemList';
 import AddItem from './AddItem';
 import SearchItem from './SearchItem'
 import apiRequest from './apiRequest';
-
+import FetchData from './FetchDataAndShowAsTable/FetchData'; 
 
 function App() {
 
@@ -55,19 +55,24 @@ function App() {
     const item = list.filter((i) => i.id === id);
     const updateOptions = {
       method: 'PATCH',
-      header: {
+      headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ checked: item[0].checked })
     };
-    const url = `${API_URL}/${id}}`;
+    const url = `${API_URL}/${id}`;
     const result = await apiRequest(url, updateOptions);
     if (result) setFetchError(result);
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const list = items.filter((item) => item.id !== id);
     setItems(list);
+
+    const deleteOptions = {method: 'DELETE'};
+    const url = `${API_URL}/${id}`;
+    const result = await apiRequest(url, deleteOptions);
+    if (result) setFetchError(result);
   }
 
   const handleSubmit = (e) => {
@@ -90,7 +95,7 @@ function App() {
 
       const postOptions = {
         method: 'POST',
-        header: {
+        headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(currentNewItem)
@@ -109,6 +114,7 @@ function App() {
     <div className='App'>
       <Header title='List of products'/>
 
+      {/* <FetchData /> */}
       <main>
         {/* <HandleClick /> */}
 
@@ -130,8 +136,7 @@ function App() {
           handleOnCheck={handleOnCheck}
           handleDelete={handleDelete} />
         }
-
-       {/*  <ChangingColorPage /> */}
+        {/* <ChangingColorPage /> */}
       </main>
 
       <Footer length={items.length} />
