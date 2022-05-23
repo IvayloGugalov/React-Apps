@@ -1,8 +1,32 @@
-import React from 'react'
+import React, { useState, useContext } from 'react'
+import DataContext from '../context/DataContext'
+import { format } from 'date-fns'
 
-const NewPost = ({
-  handleCreate, postTitle, setPostTitle, postBody, setPostBody
-}) => {
+const NewPost = () => {
+  const { posts, setPosts, navigate, api } = useContext(DataContext);
+  const [postTitle, setPostTitle] = useState('');
+  const [postBody, setPostBody] = useState('');
+
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    const id = posts.length
+      ? posts[posts.length - 1].id + 1
+      : 1;
+    const dateTime = format(new Date(), 'MMMM dd, yyyy pp');
+    const newPost = { id, title: postTitle, date: dateTime, body: postBody };
+
+    try {
+      const response = await api.post('/posts', newPost);
+      const allPosts = [ ...posts, response.data ];
+      setPosts(allPosts);
+      setPostTitle('');
+      setPostBody('');
+      navigate('/');
+    } catch (err) {
+      console.log(`Error: ${err.message}`);
+    }
+  }
+
   return (
     <main className='NewPost'>
       <h2>New post</h2>
