@@ -19,3 +19,8 @@ Using React Router v6 to showcase a simple routing:
   <Footer />
 </div>
 ```
+## How to run
+
+- run ```npm install```
+- run ```npx json-server -p 3500 -w src/data/db.json``` to start up the json server database```
+- run ```npm start```
